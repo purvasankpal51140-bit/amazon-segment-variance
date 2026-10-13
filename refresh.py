@@ -2,13 +2,13 @@
 Amazon segment variance report: one-step refresh.
 
 Adding a quarter:
-    1. Append three rows to data/segments.csv (one per segment) and one row to
-       data/consolidated_check.csv, straight from the new 10-Q / earnings release.
+    1. Append three rows to segments.csv (one per segment) and one row to
+       consolidated_check.csv, straight from the new 10-Q / earnings release.
     2. Run:  python refresh.py
 
 The script rebuilds amazon.db from scratch, stops if the segments do not tie to
-the reported consolidated totals, then writes output/segment_report.xlsx and
-output/segment_chart.png.
+the reported consolidated totals, then writes segment_report.xlsx and
+segment_chart.png.
 """
 import csv
 import sqlite3
@@ -25,7 +25,7 @@ from openpyxl.utils import get_column_letter
 
 ROOT = Path(__file__).parent
 DB = ROOT / "amazon.db"
-OUT = ROOT / "output"
+OUT = ROOT
 SEGMENTS = ["North America", "International", "AWS"]
 COLORS = {"North America": "#2a78d6", "International": "#eb6834", "AWS": "#1baf7a"}
 
@@ -43,10 +43,10 @@ def load_csv(con, table, path):
 def build_db():
     DB.unlink(missing_ok=True)
     con = sqlite3.connect(DB)
-    for sql in sorted((ROOT / "sql").glob("*.sql")):
+    for sql in sorted(ROOT.glob("0*.sql")):
         con.executescript(sql.read_text())
-    load_csv(con, "segment_results", ROOT / "data" / "segments.csv")
-    load_csv(con, "consolidated_check", ROOT / "data" / "consolidated_check.csv")
+    load_csv(con, "segment_results", ROOT / "segments.csv")
+    load_csv(con, "consolidated_check", ROOT / "consolidated_check.csv")
     con.commit()
     return con
 
@@ -66,8 +66,8 @@ def check_tieout(con):
 
 def check_second_source():
     """Compare every figure to the same quarter as printed in a different filing."""
-    d = pd.read_csv(ROOT / "data" / "segments.csv")
-    c = pd.read_csv(ROOT / "data" / "crosscheck_sources.csv")
+    d = pd.read_csv(ROOT / "segments.csv")
+    c = pd.read_csv(ROOT / "crosscheck_sources.csv")
     m = d.merge(c, on=["fiscal_quarter", "segment"], how="left", suffixes=("", "_chk"))
     unchecked = m[m.check_source.isna()]
     bad = m[m.check_source.notna() & ((m.net_sales_musd != m.net_sales_musd_chk)
@@ -150,7 +150,6 @@ def style_workbook(path, wrap_sheets=("Commentary",)):
 
 
 def main():
-    OUT.mkdir(exist_ok=True)
     con = build_db()
     tie = check_tieout(con)
     n_checked, unchecked = check_second_source()
@@ -158,7 +157,7 @@ def main():
     analysis = pd.read_sql("SELECT * FROM v_segment_analysis", con)
     swings = pd.read_sql("SELECT * FROM v_biggest_swings LIMIT 10", con)
     raw = pd.read_sql("SELECT * FROM segment_results ORDER BY fiscal_quarter, segment", con)
-    commentary = pd.read_csv(ROOT / "data" / "commentary.csv")
+    commentary = pd.read_csv(ROOT / "commentary.csv")
 
     latest = analysis.fiscal_quarter.max()
     summary = analysis[analysis.fiscal_quarter == latest][
@@ -184,7 +183,7 @@ def main():
     if len(unchecked):
         print("  Not yet second-sourced:", ", ".join(sorted(set(unchecked.fiscal_quarter))))
     if unverified:
-        print(f"  Note: {unverified} rows still marked verified=N in data/segments.csv")
+        print(f"  Note: {unverified} rows still marked verified=N in segments.csv")
 
 
 if __name__ == "__main__":

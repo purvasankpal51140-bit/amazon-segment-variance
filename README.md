@@ -2,7 +2,7 @@
 
 A monthly-close style variance report on Amazon's three operating segments (North America, International, AWS), built from Amazon's own SEC filings. Twelve quarters, Q3 2023 to Q2 2026.
 
-![Segment chart](output/segment_chart.png)
+![Segment chart](segment_chart.png)
 
 ## Key findings (Q2 2026)
 
@@ -22,25 +22,26 @@ A monthly-close style variance report on Amazon's three operating segments (Nort
 ## How it works
 
 ```
-data/segments.csv            one row per segment per quarter, with source filing
-data/consolidated_check.csv  reported company totals, used for tie-out
-data/commentary.csv          variance commentary with source and fact-check flag
-sql/01_schema.sql            tables
-sql/02_views.sql             tie-out, QoQ/YoY growth, margins, OI share, ranked swings
-refresh.py                   rebuilds the database, checks tie-out, writes Excel and chart
+segments.csv             one row per segment per quarter, with source filing
+consolidated_check.csv   reported company totals, used for tie-out
+crosscheck_sources.csv   each figure as printed in a second SEC filing
+commentary.csv           variance commentary with source and fact-check flag
+01_schema.sql            tables
+02_views.sql             tie-out, QoQ/YoY growth, margins, OI share, ranked swings
+refresh.py               rebuilds the database, runs both checks, writes Excel and chart
 ```
 
 **Data integrity checks.** Before producing any output, the script runs two checks and stops if either fails:
 
 1. **Tie-out:** the three segments sum exactly to Amazon's reported consolidated net sales and operating income for every quarter.
-2. **Second source:** every figure matches the same quarter as printed in a different SEC filing (`data/crosscheck_sources.csv`), usually that quarter's original earnings release.
+2. **Second source:** every figure matches the same quarter as printed in a different SEC filing (`crosscheck_sources.csv`), usually that quarter's original earnings release.
 
 ## Adding a new quarter
 
-1. Add three rows to `data/segments.csv` and one row to `data/consolidated_check.csv` from the new 10-Q, plus three rows to `data/crosscheck_sources.csv` from a second filing (the earnings release works).
+1. Add three rows to `segments.csv` and one row to `consolidated_check.csv` from the new 10-Q, plus three rows to `crosscheck_sources.csv` from a second filing (the earnings release works).
 2. Run `python refresh.py`.
 
-Output: `output/segment_report.xlsx` (summary, commentary, biggest swings, full analysis, tie-out, raw data) and `output/segment_chart.png`.
+Output: `segment_report.xlsx` (summary, commentary, biggest swings, full analysis, tie-out, raw data) and `segment_chart.png`.
 
 Requirements: Python 3.9+, `pandas`, `openpyxl`, `matplotlib`. SQLite ships with Python.
 

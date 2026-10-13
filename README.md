@@ -51,4 +51,4 @@ Requirements: Python 3.9+, `pandas`, `openpyxl`, `matplotlib`. SQLite ships with
 - [Q2 2026 earnings release (8-K Ex. 99.1)](https://www.sec.gov/Archives/edgar/data/1018724/000101872426000024/amzn-20260630xex991.htm): Q1 2025 to Q2 2026
 - [Q1 2024 10-Q](https://www.sec.gov/Archives/edgar/data/1018724/000101872424000083/amzn-20240331.htm), [Q2 2024 10-Q](https://www.sec.gov/Archives/edgar/data/1018724/000101872424000130/amzn-20240630.htm), [Q3 2024 10-Q](https://www.sec.gov/Archives/edgar/data/1018724/000101872424000161/amzn-20240930.htm), [Q3 2025 10-Q](https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/amzn-20250930.htm), [Q2 2026 10-Q](https://www.sec.gov/Archives/edgar/data/0001018724/000101872426000026/amzn-20260630.htm): MD&A for variance commentary
 
-Figures are taken from the most recent filing that reports each quarter, so they reflect any later recasts.
+Figures were extracted from SEC filings with Claude, then every number was checked against a second filing and tied out to Amazon’s reported totals before use.

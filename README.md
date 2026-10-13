@@ -1,6 +1,6 @@
 # Amazon Segment Variance Analysis
 
-A monthly-close style variance report on Amazon's three operating segments (North America, International, AWS), built from Amazon's own SEC filings. Twelve quarters, Q3 2023 to Q2 2026.
+A close-style quarterly variance report on Amazon's three operating segments (North America, International, AWS), built from Amazon's own SEC filings. Twelve quarters, Q3 2023 to Q2 2026.
 
 ![Segment chart](segment_chart.png)
 

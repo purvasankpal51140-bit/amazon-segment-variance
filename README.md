@@ -6,11 +6,6 @@ A close-style quarterly variance report on Amazon's three operating segments (No
 
 ## Key findings (Q2 2026)
 
-## Power BI dashboard
-
-![Power BI dashboard](dashboard.png)
-
-`amazon_segments.pbix` and `measures.dax`. A Calendar table drives a year-over-year margin measure (SAMEPERIODLASTYEAR), which returns blank when either quarter is missing so it never shows a false change at the edges of the data. Card totals reconciled to `segment_report.xlsx`.
 
 | Segment | Net sales | Op. income | Margin | Sales YoY | Share of OI |
 |---|---|---|---|---|---|
@@ -24,6 +19,13 @@ A close-style quarterly variance report on Amazon's three operating segments (No
 2. **International, 2024 turnaround.** Operating income went from a $419M loss in Q4 2023 to $1.3B profit in Q4 2024, as higher unit and advertising sales outgrew shipping and fulfillment cost increases.
 3. **North America, Q3 2025 (OI down $874M YoY).** A $2.5B FTC legal settlement plus part of $1.8B in company-wide severance. Excluding the FTC charge, segment margin was 6.9%, not 4.5%.
 4. **AWS, Q2 2026 (OI +64% YoY).** Sales grew 37%, the fastest in 18 quarters, outpacing infrastructure spend. AWS produced 61% of operating income on 21% of sales.
+
+## Power BI dashboard
+
+![Power BI dashboard](dashboard.png)
+
+`amazon_segments.pbix` and `measures.dax`. A Calendar table drives a year-over-year margin measure (SAMEPERIODLASTYEAR), which returns blank when either quarter is missing so it never shows a false change at the edges of the data. Card totals reconciled to `segment_report.xlsx`.
+
 
 ## How it works
 

@@ -1,0 +1,52 @@
+// Amazon segment dashboard: DAX used in the Power BI model
+// Source table: segments (from segments.csv, one row per quarter per segment)
+
+// ---------- Date table ----------
+Calendar = CALENDAR(DATE(2023,1,1), DATE(2026,12,31))
+
+// Calculated column on Calendar, used as the chart axis
+Quarter = YEAR('Calendar'[Date]) & "Q" & QUARTER('Calendar'[Date])
+
+// ---------- Base measures ----------
+Net Sales = SUM(segments[net_sales_musd])
+
+Operating Income = SUM(segments[operating_income_musd])
+
+Operating Margin = DIVIDE([Operating Income], [Net Sales])
+
+// ---------- Year-over-year margin change ----------
+// Returns blank when either quarter is missing: no prior year (first four
+// quarters) or no current data (Calendar quarters after Q2 2026).
+Margin YoY bps =
+VAR CurrentMargin = [Operating Margin]
+VAR PriorMargin =
+    CALCULATE([Operating Margin], SAMEPERIODLASTYEAR('Calendar'[Date]))
+RETURN
+    IF(
+        ISBLANK(CurrentMargin) || ISBLANK(PriorMargin),
+        BLANK(),
+        (CurrentMargin - PriorMargin) * 10000
+    )
+
+// ---------- Segment share of operating income ----------
+OI Share =
+DIVIDE(
+    [Operating Income],
+    CALCULATE([Operating Income], ALL(segments[segment]))
+)
+
+// ---------- Latest-quarter KPI cards ----------
+// A card with plain [Net Sales] shows the total across all quarters.
+// These pin the cards to the most recent quarter in the data.
+Latest Quarter End = MAX(segments[period_end])
+
+Latest Net Sales =
+VAR MaxDate = [Latest Quarter End]
+RETURN CALCULATE([Net Sales], segments[period_end] = MaxDate)
+
+Latest Operating Income =
+VAR MaxDate = [Latest Quarter End]
+RETURN CALCULATE([Operating Income], segments[period_end] = MaxDate)
+
+Latest Operating Margin =
+DIVIDE([Latest Operating Income], [Latest Net Sales])

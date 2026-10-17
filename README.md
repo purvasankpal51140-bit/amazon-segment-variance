@@ -6,6 +6,12 @@ A close-style quarterly variance report on Amazon's three operating segments (No
 
 ## Key findings (Q2 2026)
 
+## Power BI dashboard
+
+![Power BI dashboard](dashboard.png)
+
+`amazon_segments.pbix` and `measures.dax`. A Calendar table drives a year-over-year margin measure (SAMEPERIODLASTYEAR), which returns blank when either quarter is missing so it never shows a false change at the edges of the data. Card totals reconciled to `segment_report.xlsx`.
+
 | Segment | Net sales | Op. income | Margin | Sales YoY | Share of OI |
 |---|---|---|---|---|---|
 | North America | $116.2B | $9.1B | 7.9% | +16.1% | 33% |
